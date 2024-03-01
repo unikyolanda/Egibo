@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-sans;
+}
+
+.left-mark {
+  border-radius: 10% 10% 0% 0% / 40% 40% 0% 0%;
+  transform-origin: 50% 100%;
+  filter: drop-shadow(4px -8px 4px rgb(200,200,200,0.2));
+}
+
+.left-mark::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: -20px;
+  bottom: 0;
+  background:radial-gradient(circle at 100% 0, transparent 20px, #ffffff 21px);
+}
+
+.right-mark {
+  border-radius: 10% 10% 0% 0% / 40% 40% 0% 0%;
+  transform-origin: 50% 100%;
+  filter: drop-shadow(-4px -8px 4px rgb(200,200,200,0.2));
+}
+
+.right-mark::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: -20px;
+  bottom: 0;
+  background:radial-gradient(circle at 0 0, transparent 20px, #ffffff 21px);
+}
+
+.bottom-mark {
+  filter: drop-shadow(4px -7px 4px rgb(200,200,200,0.2));
+}
+
+.gradient-underline {
+  display: inline;
+  background-image: linear-gradient(90deg, transparent 60%, #7ea0f5 60%, #60bffd 80%, #b1b1fd 100%);
+  background-repeat: no-repeat;
+  background-size: 90% 4px;
+  background-position: -220% 100%;
+}
+
+.car {
+  background-image: url('/src/images/bg64.jpg');
+}
+
+.eye-icon-all {
+  position: absolute;
+  height: 24px;
+  width: 24px;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.eye-icon {
+  background-image: url('/src/images/eye.svg');
+}
+
+.eye-slash-icon {
+  background-image: url('/src/images/close\ eye.svg');
+}
+
+.check {
+  background-image: url('/src/images/success.svg');
+}
+
+.cross {
+  background-image: url('/src/images/cross.svg');
+}
+
+.arrowdown {
+  background-image: url('/src/images/arrowdown.svg');
+  background-position: right 10px center;
+  background-size: 20px 20px;
+}
+
+.upload-line {
+  background-image: linear-gradient(90deg, #7ea0f5 0%, #60bffd 50%, #b1b1fd 100%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  transition: width 0.5s ease;
+}
+
+.dropshadow-pr {
+  filter: drop-shadow(4px 4px 4px rgba(154, 170, 207, 0.7));
+}
+
+.dropshadow-sc {
+  filter: drop-shadow(2px 2px 2px rgba(154, 170, 207, 0.3));
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}

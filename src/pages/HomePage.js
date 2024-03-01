@@ -4,7 +4,6 @@ import logoutpic from '../images/logout.svg';
 import pen from '../images/pen.svg';
 import search from '../images/search.svg';
 import dashboardbg from '../images/dashboard with bg.svg';
-import FirstDiv from '../components/FirstDiv';
 import upload from '../images/upload.svg';
 import camera from '../images/camera.svg'
 import hamburger from '../images/hamburger.svg';
@@ -13,15 +12,32 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Switch from '../components/Switch';
+import failure from '../images/failure.svg'
 
 function HomePage() {
     const [isNavOpen, setIsNavOpen] = useState(false);
 
     const [isGarageToggled, setIsGarageToggled] = useState(false);
-    const toggleGarageSwitch = () => setIsGarageToggled(!isGarageToggled);
+    const toggleGarageSwitch = () => {
+        setIsGarageToggled(current => {
+            setFormData2(prevState => ({
+                ...prevState,
+                has_garage: !current,
+            }));
+            return !current;
+        });
+    };
 
     const [isDriverToggled, setIsDriverToggled] = useState(false);
-    const toggleDriverSwitch = () => setIsDriverToggled(!isDriverToggled);
+    const toggleDriverSwitch = () => {
+        setIsDriverToggled(current => {
+            setFormData2(prevState => ({
+                ...prevState,
+                has_dedicated_driver: !current,
+            }));
+            return !current;
+        });
+    };
 
     const scrollTo = (pixel) => {
         window.scrollTo({
@@ -182,7 +198,10 @@ function HomePage() {
         company_location: '',
         mileage: 0,
         has_garage: isGarageToggled,
-        has_dedicated_driver: isDriverToggled
+        has_dedicated_driver: isDriverToggled,
+        company: '公司A',
+        business_factory: '營業廠A',
+        date: ''
     });
     
     const handleInputChange = (e) => {
@@ -198,36 +217,81 @@ function HomePage() {
           [name]: type === 'checkbox' ? checked : finalValue,
         }));
     };
-
+    
     const [formData3, setFormData3] = useState({
         email: email,
         business_channel_name:'',
         insurance_annual_premium: 0,
-        original_insurance_customer: false,
         referral_relationship:'',
+        original_insurance_customer: false,
         direct_customer_inquiry: false,
         other_source: false,
-        sourceType: ''
     });
 
+    const handleBusinessChange = (e) => {
+        setFormData3(prevState => ({
+            ...prevState,
+            business_channel_name: e.target.value,
+        }));
+    }
+
+    const handleInsuranceChange = (e) => {
+        const insuranceValue = e.target.value.trim();
+        let validNumber = 0;
+    
+        if (/^[0-9]+(\.[0-9]*)?$/.test(insuranceValue)) {
+            validNumber = parseFloat(insuranceValue);
+        }
+    
+        setFormData3(prevState => ({
+            ...prevState,
+            insurance_annual_premium: validNumber,
+        }));
+    };
+
+    const handleRelationshipChange = (e) => {
+        setFormData3(prevState => ({
+            ...prevState,
+            referral_relationship: e.target.value,
+        }));
+    }
+
     const handleInputChange3 = (e) => {
-        const { name, value, type, checked } = e.target;
+        const { value, type } = e.target;
+        let updates = {};
 
-        let updatedValue = value;
+        if (type === 'radio') {
+            updates = {
+                business_channel_name: '',
+                insurance_annual_premium: 0,
+                referral_relationship: '',
+                original_insurance_customer: false,
+                direct_customer_inquiry: false,
+                other_source: false,
+            };
+    
+            if (value === '業務通路名稱') {
+                updates.business_channel_name = formData3.business_channel_name;
+            } else if (value === '水火險業務客戶') {
+                updates.insurance_annual_premium = formData3.insurance_annual_premium;
+            } else if (value === '同仁親友介紹') {
+                updates.referral_relationship = formData3.referral_relationship;
+            } else if (value === '原車險客戶') {
+                updates.original_insurance_customer = true;
+            } else if (value === '客戶自行來電') {
+                updates.direct_customer_inquiry = true;
+            } else if (value === '其他') {
+                updates.other_source = true;
+            }
 
-        if (type === 'checkbox') {
-            updatedValue = checked;
-        } else if (type === 'radio') {
-            updatedValue = value;
-        } else if (name === 'insurance_annual_premium') {
-            updatedValue = value === '' ? '' : Number(value);
+            if (value !== '業務通路名稱') updates.business_channel_name = '';
+            if (value !== '水火險業務客戶') updates.insurance_annual_premium = '';
+            if (value !== '同仁親友介紹') updates.referral_relationship = '';
         }
 
         setFormData3(prevState => ({
             ...prevState,
-            [name]: updatedValue,
-            // 若為 radio，則更新 sourceType，否則不改變 sourceType
-            ...(type === 'radio' && { sourceType: value })
+            ...updates,
         }));
     };
 
@@ -236,34 +300,63 @@ function HomePage() {
         deductible_exemption: false,
         depreciation_exemption: false,
         compulsory_insurance: false,
-        theft_deductible_percentage: 0,
-        third_party_bodily_injury_cost: 0,
-        third_party_property_damage_cost: 0,
-        driver_insurance_cost: 0,
-        passenger_insurance_cost: 0,
-        excess_clause_cost: 0,
+        theft_deductible_percentage: '',
+        third_party_bodily_injury_cost: '',
+        third_party_property_damage_cost: '',
+        driver_insurance_cost: '',
+        passenger_insurance_cost: '',
+        excess_clause_cost: '',
         other:''
     });
 
     const handleInputChange4 = (e) => {
         const { name, value, type, checked } = e.target;
-
+    
         let finalValue = value;
-        if (name === 'theft_deductible_percentage' 
-            || name === 'third_party_bodily_injury_cost'
-            || name === 'third_party_property_damage_cost'
-            || name === 'driver_insurance_cost'
-            || name === 'passenger_insurance_cost'
-            || name === 'excess_clause_cost'
-        ) {
-            finalValue = value === '' ? '' : Number(value);
-        } else {
-            setFormData4(prevState => ({
-              ...prevState,
-              [name]: type === 'checkbox' ? checked : finalValue,
-            }));
+    
+        if (['theft_deductible_percentage', 'third_party_bodily_injury_cost', 'third_party_property_damage_cost', 
+            'driver_insurance_cost', 'passenger_insurance_cost', 'excess_clause_cost'].includes(name)) {
+            const numericValue = value.replace(/[^0-9.]/g, '');
+            
+            finalValue = numericValue === '' ? 0 : parseFloat(numericValue) || 0;
         }
+    
+        setFormData4(prevState => ({
+            ...prevState,
+            [name]: type === 'checkbox' ? checked : finalValue,
+        }));
+    };
 
+    const [showAlert, setShowAlert] = useState(false);
+    const [alert, setAlert] = useState('');
+
+    const validateForm2 = (formData) => {
+        if (!formData.date) {
+            setShowAlert(true);
+            setAlert('請確認是否已填寫日期及公司。')
+            return false;
+        }
+    
+        if (!formData.insured_name || !formData.insured_id || !formData.license_plate_number ||
+            !formData.user_name || !formData.user_id || !formData.user_age || !formData.insurance_nature ||
+            !formData.business_activity || !formData.job_title || !formData.company_location || !formData.mileage) {
+            setShowAlert(true);
+            setAlert('請確認是否每一個欄位都已填寫完成。')
+            return false;
+        }
+    
+        return true;
+    };
+
+    const validateForm3 = (formData) => {
+        if (!formData.business_channel_name && !formData.insurance_annual_premium && !formData.original_insurance_customer &&
+            !formData.referral_relationship && !formData.direct_customer_inquiry && !formData.other_source) {
+            setShowAlert(true);
+            setAlert('請填寫業務來源。')
+            return false;
+        }
+                
+        return true;
     };
 
     const handleSubmit = async () => {
@@ -275,27 +368,44 @@ function HomePage() {
 
         const updatedFormData3 = {
             ...formData3,
-            original_insurance_customer: formData3.sourceType === '原車險客戶',
-            direct_customer_inquiry: formData3.sourceType === '客戶自行來電',
-            other_source: formData3.sourceType 
-                !== '原車險客戶' && formData3.sourceType
-                !== '客戶自行來電' && formData3.sourceType
-                !== '業務通路名稱' && formData3.sourceType
-                !== '水火險業務客戶' && formData3.sourceType
-                !== '同仁親友介紹',
+            insurance_annual_premium: formData3.insurance_annual_premium || 0
+        }
+
+        const updatedFormData4 = {
+            ...formData4,
+            theft_deductible_percentage: formData4.theft_deductible_percentage || 0,
+            third_party_bodily_injury_cost: formData4.third_party_bodily_injury_cost || 0,
+            third_party_property_damage_cost: formData4.third_party_property_damage_cost || 0,
+            driver_insurance_cost: formData4.driver_insurance_cost || 0,
+            passenger_insurance_cost: formData4.passenger_insurance_cost || 0,
+            excess_clause_cost: formData4.excess_clause_cost || 0,
         };
+
+        const hasImage = files.some(file => file.file.type.startsWith('image/') && file.uploaded);
+
+        if (!validateForm2(formData2)) {
+            return;
+        }
+        if (!validateForm3(formData3)) {
+            return;
+        }
+        if (!hasImage) {
+            setShowAlert(true);
+            setAlert('請上傳圖檔');
+            return;
+        }
 
         try {
             console.log(updatedFormData2);
             const response2 = await axios.post('http://192.168.0.120:5006/add_vehicle_owner_info', updatedFormData2);
             console.log(response2.data);
 
-            console.log(formData3);
+            console.log(updatedFormData3);
             const response3 = await axios.post('http://192.168.0.120:5006/add_business_source', updatedFormData3);
             console.log(response3.data);
 
-            console.log(formData4);
-            const response4 = await axios.post('http://192.168.0.120:5006/add_insurance_requirement', formData4);
+            console.log(updatedFormData4);
+            const response4 = await axios.post('http://192.168.0.120:5006/add_insurance_requirement', updatedFormData4);
             console.log(response4.data);
 
             const formData = new FormData();
@@ -377,11 +487,75 @@ function HomePage() {
                     </div>
                 </div>
             </div>
-            <FirstDiv />
+
+            {/* First Div */}
+            <div className='flex justify-center items-center bg-[#f7f7f9] w-full overflow-x: hidden;'>
+                <div className='w-full sm:w-[954px] h-[1280px] sm:h-[1130px] pt-[80px] px-4'>
+                    <div className='w-[343px] sm:w-[445px] h-[64px] flex relative mb-6 sm:mb-0'>
+                        <p className='hidden sm:flex font-bold text-[#1b1c46] mr-4'>公司/個人：</p>
+                        <p className='sm:hidden flex font-bold text-[#1b1c46] mr-4 text-sm sm:text-base mt-3 ml-1'>單位：</p>
+                        <select className='appearance-none arrowdown w-[130px] sm:w-[10rem] h-10 bg-no-repeat pl-3 text-sm text-gray-pr rounded-lg border-[1px] border-[#dedede] mr-4 cursor-pointer'
+                            name="company"
+                            onChange={handleInputChange}>
+                            <option value='公司A'>公司A</option>
+                            <option value='公司B'>公司B</option>
+                            <option value='公司C'>公司C</option>
+                        </select>
+                        <select className='appearance-none arrowdown w-[130px] sm:w-[10rem] h-10 bg-no-repeat pl-3 text-sm text-gray-pr rounded-lg border-[1px] border-[#dedede] cursor-pointer'
+                            name="business_factory"
+                            onChange={handleInputChange}>
+                            <option value='營業廠A'>營業廠A</option>
+                            <option value='營業廠B'>營業廠B</option>
+                            <option value='營業廠C'>營業廠C</option>
+                        </select>
+                        <p className='text-sm text-[#20c374] absolute top-[-25px] right-20 sm:right-28'>*非必填</p>
+                    </div>
+                    <div className='w-full h-[52px] flex flex-col-reverse sm:flex-row items-center justify-between mb-6'>
+                        <div className='flex items-center'>
+                            <div className='w-7 h-7 bg-[#4339e4] text-white rounded-lg flex justify-center items-center pb-1'>1</div>
+                            <div className='w-[300px] sm:w-[413px] h-2 bg-[#4339e4] text-white rounded-full ml-2'></div>
+                        </div>
+                        <div className='flex items-center mb-6 sm:mb-0'>
+                            <p className='font-bold text-[#1b1c46] mr-2 sm:mr-4 text-sm sm:text-base'>日期：</p>
+                            <input type='date'
+                                className='w-[284px] sm:w-[307px] h-10 sm:h-[52px] rounded-lg px-3'
+                                name='date'
+                                onChange={handleInputChange}></input>
+                        </div>
+                    </div>
+                    <div className='w-full h-[384px] sm:h-[360px] bg-white rounded-lg py-6 px-4 shadow-md mb-6'>
+                        <p className='text-sm sm:text-xl text-[#1b1c46] font-bold mb-6'>投保須知   一般限保業務:</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 車體或第三人賠款紀錄不佳。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 營業小客車、個人計程車投保任意險者。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 大型重型機車投保車體險、竊盜險保額超過100萬，或駕駛人傷害險、乘客險每一人保額超過100萬。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 大貨車、曳引車第三人保額高於300/1500/50萬或雇主責任險500萬(含)以上。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 保額300萬(含)以上承保車體或竊盜險(經汽車保險部部核可之車商保代除外)。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 投保5台以上約駕名冊為同一人者。</p>
+                        <p className='text-sm sm:text-base text-[#545454] leading-[1.4]'>． 其他由系統進行管控之業務。</p>
+                    </div>
+                    <div className='w-full h-[488px] sm:h-[441px] bg-white rounded-lg py-6 px-4 shadow-md mb-6'>
+                        <p className='text-sm sm:text-xl text-[#1b1c46] font-bold mb-6'>投保須知   特殊限保業務:</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 大型重型機車投保車體或竊盜險其保額高於200萬者。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 大型重型機車投保駕駛人傷害或乘客險其每人保額高於200萬者。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 重型、輕型、小型輕型機車投保駕駛人傷害保險每人保額高於300萬者。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 泡水車投保車體或竊盜險者。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 投保竊盜含免折舊且0自負額者。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 高失竊車投保竊盜險者。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 救護車、營大客、短租車、拖吊車及預拌混泥車投保任意險。</p>
+                        <p className='text-sm sm:text-base text-[#545454] mb-3 sm:mb-4 leading-[1.4]'>． 稀有車輛或各廠牌跑車承保車體或竊盜險者(重置價格700萬以上)。</p>
+                        <p className='text-sm sm:text-base text-[#545454] leading-[1.4]'>． 貨物運送人責任險其載運物品為大理石、汽車、化學物品或高價電子成品者。</p>
+                    </div>
+                    <p className='text-sm sm:text-lg text-[#20c374] my-6 w-full'>＊以上資訊為投保需求單須知</p>
+                    <div className='w-full flex justify-end'>
+                        <button className='bg-[#4339e4] text-white font-bold w-[197px] h-[57px] rounded-[32px] hover:bg-[#2e26a3]'
+                            onClick={() => scrollTo(1950)}>已了解</button>
+                    </div>
+                </div>
+            </div>
 
             {/* Second Div */}
             <div className='flex justify-center items-center bg-[#f7f7f9]'>
-                <div className='w-[343px] sm:w-[954px] h-[1650px] sm:h-[830px] pt-[80px]'>
+                <div className='w-[343px] sm:w-[954px] h-[1650px] sm:h-[830px] mt-[80px]'>
                     <div className='w-full h-[52px] flex items-center justify-between mb-6'>
                         <div className='flex items-center'>
                             <div className='w-7 h-7 bg-[#4339e4] text-white rounded-lg flex justify-center items-center pb-1'>2</div>
@@ -589,7 +763,8 @@ function HomePage() {
                                         <input className='mx-2 w-5 h-5'
                                             type="radio"
                                             name="sourceType" 
-                                            value="業務通路名稱"/>
+                                            value="業務通路名稱"
+                                            onChange={handleInputChange3}/>
                                         業務通路名稱：
                                     </label>
                                     <input className={`w-[286px] h-[50px] pl-5 checkout-name rounded-xl border-[1px] border-[#dedede] text-base bg-[#f7f7f9] mb-4
@@ -597,15 +772,17 @@ function HomePage() {
                                     placeholder="輸入被保險人的業務通路名稱"
                                     type="text"
                                     name="business_channel_name"
-                                    onChange={handleInputChange3}
-                                />
+                                    value={formData3.business_channel_name}
+                                    onChange={handleBusinessChange}
+                                    />
                                 </div>
                                 <div className="flex flex-col sm:flex-row">
                                     <label className='text-sm text-[#545454] mb-4 mr-2 leading-[1.4] flex items-center'>
                                         <input className='mx-2 w-5 h-5'
                                             type="radio"
                                             name="sourceType" 
-                                            value="水火險業務客戶"/>
+                                            value="水火險業務客戶"
+                                            onChange={handleInputChange3}/>
                                         水、火險業務客戶，年保費
                                     </label>
                                     <input className={`w-[286px] h-[50px] pl-5 checkout-name rounded-xl border-[1px] border-[#dedede] text-base bg-[#f7f7f9] mb-4
@@ -613,15 +790,17 @@ function HomePage() {
                                     placeholder="輸入被保險人的年保費"
                                     type="text"
                                     name="insurance_annual_premium"
-                                    onChange={handleInputChange3}
-                                />
+                                    value={formData3.insurance_annual_premium}
+                                    onChange={handleInsuranceChange}
+                                    />
                                 </div>
                                 <div className="flex flex-col sm:flex-row">
                                     <label className='text-sm text-[#545454] mb-4 mr-2 leading-[1.4] flex items-center'>
                                         <input className='mx-2 w-5 h-5'
                                             type="radio"
                                             name="sourceType" 
-                                            value="同仁親友介紹"/>
+                                            value="同仁親友介紹"
+                                            onChange={handleInputChange3}/>
                                         同仁、親友介紹 關係：
                                     </label>
                                     <input className={`w-[286px] h-[50px] pl-5 checkout-name rounded-xl border-[1px] border-[#dedede] text-base bg-[#f7f7f9] mb-4
@@ -629,8 +808,9 @@ function HomePage() {
                                     placeholder="輸入被保險人與業務來源的關係"
                                     type="text"
                                     name="referral_relationship"
-                                    onChange={handleInputChange3}
-                                />
+                                    value={formData3.referral_relationship}
+                                    onChange={handleRelationshipChange}
+                                    />
                                 </div>
                                 <div className="flex">
                                     <label className='text-sm text-[#545454] mb-4 leading-[1.4] flex items-center'>
@@ -639,7 +819,7 @@ function HomePage() {
                                             name="sourceType" 
                                             value="原車險客戶"
                                             onChange={handleInputChange3}
-                                            checked={formData3.sourceType === '原車險客戶'}/>
+                                        />
                                         原車險客戶
                                     </label>
                                 </div>
@@ -650,7 +830,7 @@ function HomePage() {
                                             name="sourceType" 
                                             value="客戶自行來電"
                                             onChange={handleInputChange3}
-                                            checked={formData3.sourceType === '客戶自行來電'}/>
+                                        />
                                         客戶自行來電要保
                                     </label>
                                 </div>
@@ -661,7 +841,7 @@ function HomePage() {
                                             name="sourceType" 
                                             value="其他"
                                             onChange={handleInputChange3}
-                                            checked={formData3.sourceType === '其他'}/>
+                                        />
                                         其他
                                     </label>
                                 </div>
@@ -945,7 +1125,19 @@ function HomePage() {
                     <div className="check w-8 h-8 bg-no-repeat bg-contain mb-4"></div>
                     <p className='text-lg text-[#101828] font-bold w-[243px] mb-1'>登出成功</p>
                     <p className='text-sm text-[#475467] w-[350px]'>您已成功登出。</p>
-                    <div className="cross w-6 h-6 bg-no-repeat bg-contain absolute top-6 right-6 cursor-pointer"></div>
+                    <div className="cross w-6 h-6 bg-no-repeat bg-contain absolute top-6 right-6 cursor-pointer"
+                        onClick={() => setShowDiv(false)}></div>
+                </div>
+            </div>}
+            {showAlert && <div className='bg-black/70 fixed inset-0 flex justify-center items-center z-30'>
+                <div className='w-[400px] h-[204px] bg-white flex flex-col rounded-xl p-6 relative'>
+                    <img className="check w-8 h-8 bg-no-repeat bg-contain mb-4" alt='alert' src={failure} />
+                    <p className='text-lg text-[#101828] font-bold w-[243px] mb-1'>填寫不完全</p>
+                    <p className='text-sm text-[#475467] w-[350px]'>{alert}</p>
+                    <button className='w-[352px] py-2 bg-[#4339e4] rounded-full mt-4 text-white font-medium hover:bg-[#2e26a3]'
+                        onClick={() => setShowAlert(false)}>繼續填寫</button>
+                    <div className="cross w-6 h-6 bg-no-repeat bg-contain absolute top-6 right-6 cursor-pointer"
+                        onClick={() => setShowAlert(false)}></div>
                 </div>
             </div>}
         </div>
