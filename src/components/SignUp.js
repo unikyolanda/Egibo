@@ -25,7 +25,7 @@ function SignUp () {
 
     const sendEmail = async () => {
         try {
-            const response = await axios.post('http://192.168.0.120:5006/send_email_register', {
+            const response = await axios.post('http://125.228.62.164:5006/send_email_register', {
                 email: input
             });
             if (response.status === 200) {
@@ -38,12 +38,12 @@ function SignUp () {
     }
 
     return (
-        <div className="flex flex-col px-6 sm:px-10 pt-7 relative">
+        <div className="flex flex-col px-10 pt-7 relative">
             <p className="text-[28px] text-pr font-medium">註冊</p>
             <p className="text-base text-pr mt-1 mb-7">我們將發送預設密碼和驗證碼至您的信箱。</p>
             <p className='text-sc text-lg mb-1'>Email</p>
-            <input className={`w-full h-14 pl-5 checkout-name rounded-xl border-[1px] border-[#dedede] text-base text-[#aaaeb6] mb-[184px]
-            focus:border-[1px] focus:border-[#4339e4] focus:outline-none focus:ring-4 focus:ring-[rgba(67,57,228,0.2)] focus:text-[#545454]
+            <input className={`w-full h-14 pl-5 checkout-name rounded-xl border-[1px] border-[#dedede] text-base mb-[160px] sm:mb-[184px]
+            focus:border-[1px] focus:border-[#4339e4] focus:outline-none focus:ring-4 focus:ring-[rgba(67,57,228,0.2)] text-[#545454]
             ${error ? 'border-[#ff5b60]' : ''}`}
                 placeholder="mail@example.com"
                 type="text"

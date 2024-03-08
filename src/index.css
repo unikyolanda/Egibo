@@ -6,6 +6,16 @@ body {
   @apply font-sans;
 }
 
+@font-face {
+  font-family: 'NotoSansTC';
+  src: local('NotoSansTC'), url('./fonts/NotoSansTC-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'NotoSansTC-Bold';
+  src: local('NotoSansTC-Bold'), url('./fonts/NotoSansTC-Bold.ttf') format('truetype');
+}
+
 .left-mark {
   border-radius: 10% 10% 0% 0% / 40% 40% 0% 0%;
   transform-origin: 50% 100%;

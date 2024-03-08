@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 function PasswordPage() {
-    const [active, setActive] = useState(true);
-
     const [passwordShown, setPasswordShown] = useState(false);
     const togglePasswordVisibility = () => {
       setPasswordShown(!passwordShown);
@@ -68,7 +66,7 @@ function PasswordPage() {
         }
 
         try {
-            const response = await axios.post('http://192.168.0.120:5006/verify_code_register',{
+            const response = await axios.post('http://125.228.62.164:5006/verify_code_register',{
                 email: email,
                 passWord: inputPassword,
                 code: inputVerifyCode,
@@ -84,26 +82,14 @@ function PasswordPage() {
 
     return (
         <div className="flex justify-center items-center w-screen h-screen car bg-center bg-no-repeat bg-cover">
-            <div className="w-[343px] sm:w-[540px] h-[544px] relative"
-            style={{borderRadius: active ? '0% 5% 5% 5% / 0% 5% 5% 5%' : '5% 0% 5% 5% / 5% 0% 5% 5%'}}>
-                <div className="flex">
-                    <div className={`w-[204px] sm:w-[300px] h-[61px] left-mark absolute flex justify-center items-center top-[-60px]  cursor-pointer ${active ? 'z-20 bg-white' : 'z-0 bg-white h-[81px]'}`}
-                        onClick={() => setActive(true)}>
-                            <p className={`text-xl flex relative text-pr pb-2 ${active ? 'gradient-underline' : 'mb-5 mr-14'}`}>使用者</p>
-                        </div>
-                    <div className={`w-[204px] sm:w-[300px] h-[61px] right-mark absolute flex justify-center items-center right-0 top-[-60px] cursor-pointer ${active ? 'z-0 bg-white h-[81px]' : 'z-20 bg-white'}`}
-                        onClick={() => setActive(false)}>
-                            <p className={`text-xl flex relative text-pr pb-2 ${active ? 'mb-5 ml-14' : 'gradient-underline'}`}>從業人員</p>
-                        </div>
-                </div>
-                <div className="w-[343px] sm:w-[540px] h-[544px] bg-white bottom-mark relative z-10"
-                    style={{borderRadius: active ? '0% 5% 5% 5% / 0% 5% 5% 5%' : '5% 0% 5% 5% / 5% 0% 5% 5%'}}>
+            <div className="w-[343px] sm:w-[540px] h-[544px] relative">
+                <div className="w-[343px] sm:w-[540px] h-[544px] bg-white bottom-mark relative z-10 rounded-[25px]">
                         <div className="flex flex-col px-6 sm:px-10 pt-7 relative">
                             <p className="text-[28px] text-pr font-medium mb-1">註冊</p>
                             <p className="text-sm text-pr mb-[12px]">如果您沒有收到預設密碼與驗證碼，請檢查您的垃圾郵件匣，有時可能會被誤判為垃圾郵件。</p>
                             <p className='text-sc mb-2'>密碼</p>
-                            <input className={`w-full h-14 pl-5 checkout-name rounded-xl border-[1px] border-[#dedede] text-base text-[#aaaeb6] mb-10
-                            focus:border-[1px] focus:border-[#4339e4] focus:outline-none focus:ring-4 focus:ring-[rgba(67,57,228,0.2)] focus:text-[#545454]
+                            <input className={`w-full h-14 pl-5 checkout-name rounded-xl border-[1px] border-[#dedede] text-base mb-10
+                            focus:border-[1px] focus:border-[#4339e4] focus:outline-none focus:ring-4 focus:ring-[rgba(67,57,228,0.2)] text-[#545454]
                             ${pwError ? 'border-[#ff5b60]' : ''}`}
                                 placeholder="請輸入密碼"
                                 type={passwordShown ? 'text' : 'password'}
@@ -118,8 +104,8 @@ function PasswordPage() {
                                 請輸入正確的預設密碼，應為6位英數組合
                             </div>}
                             <p className='text-sc mb-2'>驗證碼</p>
-                            <input className={`w-full h-14 pl-5 checkout-name rounded-xl border-[1px] border-[#dedede] text-base text-[#aaaeb6] mb-14
-                            focus:border-[1px] focus:border-[#4339e4] focus:outline-none focus:ring-4 focus:ring-[rgba(67,57,228,0.2)] focus:text-[#545454]`}
+                            <input className={`w-full h-14 pl-5 checkout-name rounded-xl border-[1px] border-[#dedede] text-base mb-14
+                            focus:border-[1px] focus:border-[#4339e4] focus:outline-none focus:ring-4 focus:ring-[rgba(67,57,228,0.2)] text-[#545454]`}
                                 placeholder="請輸入驗證碼"
                                 type="text"
                                 name="verifycode"

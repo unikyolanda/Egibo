@@ -3,6 +3,10 @@ import check from '../images/success_2.svg'
 import { Page, Text, View, Document, StyleSheet, PDFDownloadLink, PDFViewer, Font, Image } from '@react-pdf/renderer';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import '../fonts/NotoSansTC-Regular.ttf';
+import '../fonts/NotoSansTC-Bold.ttf';
+
+
 
 function FormSuccessPage() {
     const getSavedEmail = () => localStorage.getItem('email');
@@ -24,10 +28,10 @@ function FormSuccessPage() {
             const fetchUserData = async () => {
                 try {
                     const [response1, response2, response3, response4] = await Promise.all([
-                        axios.post('http://192.168.0.120:5006/get_vehicle_owner_info', { email }),
-                        axios.post('http://192.168.0.120:5006/get_business_source', { email }),
-                        axios.post('http://192.168.0.120:5006/get_insurance_requirements', { email }),
-                        axios.post('http://192.168.0.120:5006/get_user_files', { email }),
+                        axios.post('http://125.228.62.164:5006/get_vehicle_owner_info', { email }),
+                        axios.post('http://125.228.62.164:5006/get_business_source', { email }),
+                        axios.post('http://125.228.62.164:5006/get_insurance_requirements', { email }),
+                        axios.post('http://125.228.62.164:5006/get_user_files', { email }),
                     ]);
                     setData(response1.data.length > 0 ? response1.data[response1.data.length - 1] : null);
                     console.log(data);
@@ -51,12 +55,12 @@ function FormSuccessPage() {
 
     Font.register({
         family: 'NotoSansTC',
-        src: 'http://localhost:3000/NotoSansTC-Regular.ttf'
+        src: '/fonts/NotoSansTC-Regular.ttf'
     });
 
     Font.register({
         family: 'NotoSansTC-Bold',
-        src: 'http://localhost:3000/NotoSansTC-Bold.ttf'
+        src: '/fonts/NotoSansTC-Bold.ttf'
     });
 
     const styles = StyleSheet.create({
@@ -324,30 +328,30 @@ function FormSuccessPage() {
         <div className="bg-[#f7f7f9] w-full h-screen flex flex-col justify-center items-center">
             <div className='flex justify-center items-center mb-4'>
                 <img alt='check' src={check} className='w-7 h-7' />
-                <p className='text-2xl font-bold ml-2'>表單提交成功</p>
+                <p className='text-base sm:text-2xl font-bold ml-2'>表單提交成功</p>
             </div>
-            <p className='text-[#545454] mb-2'>感謝您提交保險申請表格！您的資訊已經成功收到。</p>
-            <p className='text-[#545454] mb-2'>需求單編號： AB-1234567</p>
-            <p className='text-[#545454] mb-2'>您將可以在後台觀看此保單的狀態，</p>
-            <p className='text-[#545454] mb-8'>如有任何問題可加入官方line查詢訂單。</p>
+            <p className='text-sm sm:text-base text-[#545454] mb-2'>感謝您提交保險申請表格！您的資訊已經成功收到。</p>
+            <p className='text-sm sm:text-base text-[#545454] mb-2'>需求單編號： AB-1234567</p>
+            <p className='text-sm sm:text-base text-[#545454] mb-2'>您將可以在後台觀看此保單的狀態，</p>
+            <p className='text-sm sm:text-base text-[#545454] mb-8'>如有任何問題可加入官方line查詢訂單。</p>
                 {data ? (
                     <PDFDownloadLink
                         document={<MyDocument />}
                         fileName="Egibo.pdf"
-                        className='rounded-full w-[397px] py-4 text-lg flex justify-center font-medium bg-[#4339e4] text-white hover:bg-[#2e26a3] mb-4'
+                        className='rounded-full w-[250px] sm:w-[397px] py-4 text-base sm:text-lg flex justify-center font-medium bg-[#4339e4] text-white hover:bg-[#2e26a3] mb-4'
                         >
-                    下载 PDF 文件
+                    下載 PDF 文件
                     </PDFDownloadLink>
                 ) : (
                     <button
-                        className={`rounded-full w-[397px] py-4 text-lg font-medium bg-[#4339e4] text-white mb-4`}
+                        className={`rounded-full w-[250px] sm:w-[397px] py-4 text-base sm:text-lg flex justify-center font-medium bg-[#4339e4] text-white hover:bg-[#2e26a3] mb-4`}
                         disabled
                     >
-                        下载中...
+                        下載中...
                     </button>
                 )}
             <Link to='/home'>
-                <button className={`rounded-full w-[397px] py-4 text-lg font-medium text-[#4339e4] border-[3px] border-[#4339e4] hover:bg-[#eeebfb]`}>返回首頁</button>
+                <button className={`rounded-full w-[250px] sm:w-[397px] py-4 text-base sm:text-lg font-medium text-[#4339e4] border-[3px] border-[#4339e4] hover:bg-[#eeebfb]`}>返回首頁</button>
             </Link>
             <div>
             </div>

@@ -23,7 +23,7 @@ function SignupPage() {
 
     return (
         <div className="flex justify-center items-center w-screen h-screen car bg-center bg-no-repeat bg-cover">
-            <div className="w-[343px] sm:w-[540px] h-[544px] relative"
+            <div className="w-[343px] sm:w-[540px] h-[544px] relative mt-[60px]"
             style={{borderRadius: active ? '0% 5% 5% 5% / 0% 5% 5% 5%' : '5% 0% 5% 5% / 5% 0% 5% 5%'}}>
                 <div className="flex">
                     <div className={`w-[204px] sm:w-[300px] h-[61px] left-mark absolute flex justify-center items-center top-[-60px]  cursor-pointer ${active ? 'z-20 bg-white' : 'z-0 bg-white h-[81px]'}`}

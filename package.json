@@ -2,6 +2,7 @@
   "name": "egibo",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/egibo",
   "dependencies": {
     "@react-pdf/renderer": "^3.3.8",
     "@testing-library/jest-dom": "^5.17.0",

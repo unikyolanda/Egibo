@@ -18,8 +18,8 @@ function Select({ onSelectIdentity }) {
 
     return (
         <div className="flex flex-col px-6 sm:px-10 pt-7 relative">
-            <p className="text-[28px] text-pr font-medium">註冊</p>
-            <p className="text-base text-pr mt-1 mb-7">請選擇您的職位。</p>
+            <p className="text-[28px] text-pr font-medium pl-4">註冊</p>
+            <p className="text-base text-pr mt-1 mb-7 pl-4">請選擇您的職位。</p>
             <div className='flex justify-center'>
                 <div 
                     className={`flex flex-col justify-center items-center w-[150px] h-[150px] bg-[#f4f6ff] rounded-[32px] ${chosen === '行政人員' ? 'dropshadow-pr' : 'dropshadow-sc'} cursor-pointer mr-3 sm:mr-20 hover:bg-[#e9edfd]`} 
