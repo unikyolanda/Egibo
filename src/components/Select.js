@@ -3,7 +3,7 @@ import right from '../images/業務人員.svg';
 import { useState, useEffect } from 'react';
 
 function Select({ onSelectIdentity }) {
-    const [chosen, setChosen] = useState('使用者');
+    const [chosen, setChosen] = useState('從業人員');
     
     const handleNextClick = () => {
         if(chosen) {

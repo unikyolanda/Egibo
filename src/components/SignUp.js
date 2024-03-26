@@ -5,6 +5,7 @@ import axios from 'axios';
 function SignUp () {
     const [input, setInput] = useState('');
     const [error, setError] = useState(false);
+    const [exist, setExist] = useState(false);
 
     const validateEmail = (email) => {
         const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -25,15 +26,23 @@ function SignUp () {
 
     const sendEmail = async () => {
         try {
+            setExist(false);
             const response = await axios.post('http://125.228.62.164:5006/send_email_register', {
                 email: input
             });
-            if (response.status === 200) {
+            if (response.data.status === '信件已寄出') {
                 localStorage.setItem('email', input);
                 navigate('/password');
+                console.log(response.data);
+            } else if (response.data.status === '電子信箱已存在') {
+                setExist(true);
+                console.log(response.data);
+            } else {
+                console.log(response.data);
             }
         } catch (error) {
             console.error('Failed to fetch info:', error.response ? error.response.statusText : error.message);
+            setExist(false);
         }
     }
 
@@ -53,6 +62,9 @@ function SignUp () {
             />
             {error && <div className="text-[#ff5b60] absolute top-[218px]">
                 請輸入正確的電子信箱
+            </div>}
+            {exist && <div className="text-[#ff5b60] absolute top-[218px]">
+                此電子信箱已註冊，請直接登入
             </div>}
             <button className={`rounded-full w-full py-4 text-lg font-medium ${input.length > 0 ? 'bg-[#4339e4] text-white hover:bg-[#2e26a3]' : 'bg-[#f0f0f0] text-[#b0b0b0]'}`}
                 onClick={sendEmail}>下一步</button>

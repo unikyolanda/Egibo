@@ -4,7 +4,7 @@ import SignUp from "../components/SignUp";
 
 function SignupPage() {
     const [active, setActive] = useState(true);
-    const [selectedIdentity, setSelectedIdentity] = useState('使用者');
+    const [selectedIdentity, setSelectedIdentity] = useState('車主');
 
     const handleSelectIdentity = (identity) => {
         setSelectedIdentity(identity);
@@ -12,7 +12,7 @@ function SignupPage() {
 
     const handleRoleChange = () => {
         setActive(true);
-        setSelectedIdentity('使用者');
+        setSelectedIdentity('車主');
         console.log(selectedIdentity);
     }
 
@@ -28,7 +28,7 @@ function SignupPage() {
                 <div className="flex">
                     <div className={`w-[204px] sm:w-[300px] h-[61px] left-mark absolute flex justify-center items-center top-[-60px]  cursor-pointer ${active ? 'z-20 bg-white' : 'z-0 bg-white h-[81px]'}`}
                         onClick={handleRoleChange}>
-                            <p className={`text-xl flex relative text-pr pb-2 ${active ? 'gradient-underline' : 'mb-5 mr-14'}`}>使用者</p>
+                            <p className={`text-xl flex relative text-pr pb-2 ${active ? 'gradient-underline' : 'mb-5 mr-14'}`}>車主</p>
                         </div>
                     <div className={`w-[204px] sm:w-[300px] h-[61px] right-mark absolute flex justify-center items-center right-0 top-[-60px] cursor-pointer ${active ? 'z-0 bg-white h-[81px]' : 'z-20 bg-white'}`}
                         onClick={() => setActive(false)}>
@@ -39,7 +39,7 @@ function SignupPage() {
                     style={{borderRadius: active ? '0% 5% 5% 5% / 0% 5% 5% 5%' : '5% 0% 5% 5% / 5% 0% 5% 5%'}}>
                         {active ? (
                             <SignUp />
-                        ) : selectedIdentity === '使用者' ? (
+                        ) : selectedIdentity === '車主' ? (
                             <Select onSelectIdentity={handleSelectIdentity} />
                         ) : (
                             <SignUp />

@@ -257,7 +257,7 @@ function HomePage() {
     const validateForm2 = (formData) => {
         if (!formData.date) {
             setShowAlert(true);
-            setAlert('請確認是否已填寫日期及公司。')
+            setAlert('請確認是否已填寫最上方區塊「日期」及「公司」。')
             return false;
         }
     
@@ -265,7 +265,7 @@ function HomePage() {
             !formData.user_name || !formData.user_id || !formData.user_age || !formData.insurance_nature ||
             !formData.business_activity || !formData.job_title || !formData.company_location || !formData.mileage) {
             setShowAlert(true);
-            setAlert('請確認是否每一個欄位都已填寫完成。')
+            setAlert('請確認是否已填寫第2區塊「車主背景資料」所有欄位。')
             return false;
         }
     
@@ -276,7 +276,7 @@ function HomePage() {
         if (!formData.business_channel_name && !formData.insurance_annual_premium && !formData.original_insurance_customer &&
             !formData.referral_relationship && !formData.direct_customer_inquiry && !formData.other_source) {
             setShowAlert(true);
-            setAlert('請填寫業務來源。')
+            setAlert('請確認是否已填寫第3區塊「業務來源」。')
             return false;
         }
                 
@@ -356,7 +356,7 @@ function HomePage() {
         const interval = setInterval(() => {
             progress += 10;
             setFiles(prevFiles => prevFiles.map(file => {
-                if (file.file.name === fileObj.file.name) {
+                if (file.id === fileObj.id) {
                     return { ...file, progress: Math.min(progress, 100) }; // 更新進度
                 }
                 return file;
@@ -365,7 +365,7 @@ function HomePage() {
             if (progress >= 100) {
                 clearInterval(interval);
                 setFiles(prevFiles => prevFiles.map(file => {
-                    if (file.file.name === fileObj.file.name) {
+                    if (file.id === fileObj.id) {
                         return { ...file, uploaded: true }; // 標記為已上傳
                     }
                     return file;
@@ -418,7 +418,7 @@ function HomePage() {
         }
         if (!hasImage) {
             setShowAlert(true);
-            setAlert('請上傳圖檔');
+            setAlert('請確認是否已上傳圖檔。');
             return;
         }
 
@@ -842,7 +842,7 @@ function HomePage() {
                                             name="sourceType" 
                                             value="同仁親友介紹"
                                             onChange={handleInputChange3}/>
-                                        同仁、親友介紹 關係：
+                                        同仁、親友介紹，關係：
                                     </label>
                                     <input className={`w-[286px] h-[50px] pl-5 checkout-name rounded-xl border-[1px] border-[#dedede] text-base bg-[#f7f7f9] mb-4
                                 focus:border-[1px] focus:border-[#4339e4] focus:outline-none focus:ring-4 focus:ring-[rgba(67,57,228,0.2)] text-[#545454]`}
